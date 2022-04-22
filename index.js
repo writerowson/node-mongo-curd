@@ -9,43 +9,32 @@ const port = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 
-// userName : usser1
-// Pass : JWwNUVt@Waz8QKa 
+
+// userName : newuser
+// Pass : BSYcyuebEeAHBo4Q
 
 
-
-
-const uri = "mongodb+srv://user1:JWwNUVt@Waz8QKa@cluster0.ofq71.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = "mongodb+srv://newuser:BSYcyuebEeAHBo4Q@cluster0.ofq71.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    console.log('data connected');
-    client.close();
-});
+async function run() {
+    try {
+        // to connect client
+        await client.connect();
+        console.log('db connected')
+        const userCollection = client.db('foodExpress').collection('user');
+        const user = { name: 'Rowson Ara', email: 'runu@gmail.com' };
+        const result = await userCollection.insertOne(user)
+        console.log(`user inserted with ID ${result.insertedId}`);
+    }
+    finally {
+        // to close oparetion
+        // await client.close()
+    }
 
+}
 
-
-// const uri = "mongodb+srv://user1:JWwNUVt@Waz8QKa@cluster0.ofq71.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// async function run() {
-//     try {
-//         // to connect client
-//         await client.connect()
-//         const userCollection = client.db("foodExpress").collection("devices");
-//         const user = { name: 'Mhiya Mahi', email: 'mahi@gmail.com' };
-//         const result = await userCollection.insertOne(user);
-//         console.log(`User inserted with id : ${result.insertedId}`)
-//     }
-//     finally {
-//         // to close operration
-//         await client.close()
-//     }
-
-// }
-
-// // call run console function
-// run().catch(console.dir)
+// call run console function
+run().catch(console.dir)
 
 
 
