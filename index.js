@@ -22,9 +22,12 @@ async function run() {
         await client.connect();
         console.log('db connected')
         const userCollection = client.db('foodExpress').collection('user');
-        const user = { name: 'Rowson Ara', email: 'runu@gmail.com' };
-        const result = await userCollection.insertOne(user)
-        console.log(`user inserted with ID ${result.insertedId}`);
+        app.post('/user', async (req, res) => {
+            const newUser = req.body;
+            console.log('adding new user', newUser);
+            const result = await userCollection.insertOne(newUser)
+            res.send(result)
+        })
     }
     finally {
         // to close oparetion
@@ -33,7 +36,7 @@ async function run() {
 
 }
 
-// call run console function
+// call run console function catch for error only used in astnc function
 run().catch(console.dir)
 
 
