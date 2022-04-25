@@ -1,9 +1,10 @@
 const express = require('express')
 const cors = require('cors')
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const { options } = require('nodemon/lib/config');
 const app = express()
 const port = process.env.PORT || 5000
-
+const ObjectId = require('mongodb').ObjectId
 
 // use middleware
 app.use(cors())
@@ -31,11 +32,43 @@ async function run() {
             res.send(users);
 
         })
+
+        app.get('/user/:id', async (req, res) => {
+            const id = rea.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await userCollection.findOne(query)
+            res.send(result)
+        })
+
         // Post user : adding new
         app.post('/user', async (req, res) => {
             const newUser = req.body;
             console.log('adding new user', newUser);
             const result = await userCollection.insertOne(newUser)
+            res.send(result)
+        })
+
+        //update a user
+        app.put('/user/:id', async (req, res) => {
+            const id = reqparams.id;
+            const updatedUser = req.body
+            const filter = { _id: ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    name: updatedUser.name,
+                    email: updateUser.email
+                }
+            };
+            const result = await userCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+        })
+
+        // delete a user 
+        app.delete('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            // query for delete only one not all
+            const query = { _id: ObjectId(id) }
+            const result = await userCollection.deleteOne(query)
             res.send(result)
         })
     }
@@ -59,3 +92,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log('Crud server is running')
 })
+
+
+
+
